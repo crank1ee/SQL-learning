@@ -1,3 +1,6 @@
+Insert into EmployeeDemographics VALUES        -- to add manualy data
+(1001, 'Jim', 'Halpert', 30, 'Male'),
+
 -- SELECT DISTINCT(GENDER) FROM table mean it select only unique values from category| Select X,Y select two columns etc.
 -- SELECT COUNT() AS anyname means it will show this value described as this anyname
 -- SELECT MAX/Min/AVG(salary)
