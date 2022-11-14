@@ -2,3 +2,48 @@
 -- SELECT COUNT() AS anyname means it will show this value described as this anyname
 -- SELECT MAX/Min/AVG(salary)
  SELECT * FROM SQLTUTORIAL.dbo.EmployeeSalary         -- it is direction where to luck table.
+ 
+ Select *
+FROM SQLTutorial.dbo.EmployeeDemographics        
+                                                        -- using both select creating on result two diffrent tables
+SELECT Gender, COUNT(GENDER) AS 'Amount'
+FROM SQLTutorial.dbo.EmployeeDemographics
+GROUP BY Gender
+ 
+ ---WHERE!!!!!!!!-----
+Select *                      
+FROM SQLTutorial.dbo.EmployeeDemographics
+WHERE FirstName <> 'JIM'                              -- Selection of data except <>  = etc.
+
+
+Select *                      
+FROM SQLTutorial.dbo.EmployeeDemographics
+WHERE AGE >=30 AND Gender ='Male'                  -- -||- diffrent commands  AND OR
+
+Select *                                         -- mean starting with S and % means it doesnt matter what is next     '%S%' means S anywhere (capital letter doesnt matter)
+FROM SQLTutorial.dbo.EmployeeDemographics        -- 's%ed%' means S somethign ed something
+WHERE LastName LIKE 'S%'    
+
+Select *                      
+FROM SQLTutorial.dbo.EmployeeDemographics
+Where FirstName is Not Null                     -- To show empty cells or no empty cells
+                                                    
+Select *                      
+FROM SQLTutorial.dbo.EmployeeDemographics
+Where FirstName IN ('Jim', 'Micheal', 'Meredith', 'Toby')    -- to select few names in DB (instead of AND commands 
+
+---Group!!!!!----
+SELECT Gender, COUNT(GENDER)                   -- Count is treated like extra column that is not existing in table
+FROM SQLTutorial.dbo.EmployeeDemographics
+GROUP BY Gender                               --- this soultion show that instead of using distinct its better to group, cause we can for example count people
+
+SELECT Gender, COUNT(Gender) AS 'CountGender'  -- we name counting column
+FROM SQLTutorial.dbo.EmployeeDemographics
+WHERE AGE>30                                    -- choose only people over 30
+GROUP BY Gender                                 -- group them by gender
+ORDER BY CountGender DESC                       -- show order of showing values DESC or ASC  we could also order by gender DESC and then he choose by charachter
+
+Select *
+FROM SQLTutorial.dbo.EmployeeDemographics
+Order BY Age, Gender DESC      -- from all values we order by age and then order by gender ( so double record with same age will order next by gender
+-- Order BY 4, 5 DESC          -- this works the same, but its aboslute connection to column (column 4 is age 5 is gender)
