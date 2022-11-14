@@ -1,0 +1,4 @@
+-- SELECT DISTINCT(GENDER) FROM table mean it select only unique values from category| Select X,Y select two columns etc.
+-- SELECT COUNT() AS anyname means it will show this value described as this anyname
+-- SELECT MAX/Min/AVG(salary)
+ SELECT * FROM SQLTUTORIAL.dbo.EmployeeSalary         -- it is direction where to luck table.
