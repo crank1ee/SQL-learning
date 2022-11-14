@@ -1,0 +1,36 @@
+Select *
+FROM SQLTutorial.dbo.EmployeeDemographics
+Inner Join SQLTutorial.dbo.EmployeeSalary  ---- it connect tables by same definition like ID and only the same ID
+-- Full outer join SQLTutorial.dbo.EmployeeSalary            -- it connect tables regardles if ID is match, if not then it fill it with Nulls
+-- Right Outer Join SQLTutorial.dbo.EmployeeSalary           -- take second table as master and fill with NULLS from table A
+-- Left Outer Join SQLTutorial.dbo.EmployeeSalary            -- take first table as master and fill with NULLS from table B
+ON EmployeeDemographics.EmployeeID=EmployeeSalary.EmployeeID
+
+
+Select EmployeeDemographics.EmployeeID, FirstName, LastName, salary
+FROM SQLTutorial.dbo.EmployeeDemographics
+inner join SQLTutorial.dbo.EmployeeSalary
+ON EmployeeDemographics.EmployeeID=EmployeeSalary.EmployeeID
+WHERE FirstName <> 'Micheal' AND LastName <>'Scott'
+Order By salary DESC                                             --- join two tables to check who after michael has biggest salary
+
+Select JobTitle, AVG(salary)
+FROM SQLTutorial.dbo.EmployeeDemographics
+inner join SQLTutorial.dbo.EmployeeSalary
+ON EmployeeDemographics.EmployeeID=EmployeeSalary.EmployeeID
+WHere JobTitle = 'Salesman'                                      -- to check average salary from salesmans
+Group by Jobtitle
+
+
+Select AVG(salary)
+FROM SQLTutorial.dbo.EmployeeDemographics
+inner join SQLTutorial.dbo.EmployeeSalary
+ON EmployeeDemographics.EmployeeID=EmployeeSalary.EmployeeID
+Where gender='Male' AND Age>=30                                 -- average salary in company through mans over 30
+
+Select Jobtitle, AVG(salary)
+FROM SQLTutorial.dbo.EmployeeDemographics
+inner join SQLTutorial.dbo.EmployeeSalary
+ON EmployeeDemographics.EmployeeID=EmployeeSalary.EmployeeID
+Where gender='Male' AND Age>=30
+Group BY jobtitle                                               -- similar average salary based on jobtitle in company through mans over 30 
