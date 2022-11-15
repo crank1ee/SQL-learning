@@ -1,3 +1,5 @@
+--- JOIN functions----                      ctrl+shift+R  hard refresh to loose errors naming
+
 Select *
 FROM SQLTutorial.dbo.EmployeeDemographics
 Inner Join SQLTutorial.dbo.EmployeeSalary  ---- it connect tables by same definition like ID and only the same ID
@@ -34,3 +36,108 @@ inner join SQLTutorial.dbo.EmployeeSalary
 ON EmployeeDemographics.EmployeeID=EmployeeSalary.EmployeeID
 Where gender='Male' AND Age>=30
 Group BY jobtitle                                               -- similar average salary based on jobtitle in company through mans over 30 
+
+
+--- Unions----
+Select *
+FROM SQLTutorial.dbo.EmployeeDemographics
+Union                                                           -- This will unite two tables (in this case with the same columns and "merge" them into and not include duplicates
+--Union ALL                                                     -- if we comment union and uncomment rest it will unite two tables but still show duplicates
+Select *
+FROM SQLTutorial.dbo.WareHouseEmployeeDemographics
+--ORDER BY EmployeeID
+
+--- Example on doing wrong ----
+Select EmployeeID, FirstName, Age
+FROM SQLTutorial.dbo.EmployeeDemographics
+UNION                                                             -- it unites two columns with same integers etc, but diffrent type of values, so it create double records,
+Select EmployeeID, JobTitle, salary                               -- where Firstname is fe. Salesman -> Data columns should be the same
+FROM SQLTutorial.dbo.EmployeeSalary
+ORDER BY EmployeeID
+---------
+
+-----CASES-------
+Select FirstName, Lastname, Age,
+CASE 
+	WHEN AGE = 38 THEN 'Stanley'                                      -- WHEN first When is met, then it not interpret second one it directly jump out. so result is stanley
+	WHEN AGE>30 THEN 'OLD'                   -- if >30 would be first WHEN then result would be old
+	WHEN AGE BETWEEN 27 AND 30 THEN 'Young'
+	ELSE 'Baby'
+END
+FROM SQLTutorial.dbo.EmployeeDemographics
+WHERE AGE IS NOT NULL
+ORDER BY Age
+
+
+Select FirstName, LastName, JobTitle, Salary,
+CASE
+	WHEN JobTitle = 'Salesman' THEN Salary + (Salary * .10)
+	WHen Jobtitle= 'Accountant' THEN Salary + (Salary * .05)
+	WHEN JobTitle = 'HR' THEN Salary + (Salary * .0001)
+	ELSE Salary + (Salary * 0.03)
+END AS SalaryAfterRaise
+FROM SQLTutorial.dbo.EmployeeDemographics                            -- function to check how would be raises depend of jobtitle
+JOIN SQLTutorial.dbo.EmployeeSalary
+ON EmployeeDemographics.EmployeeID=EmployeeSalary.EmployeeID
+
+---- Having clause ---
+Select JobTitle, Count(Jobtitle)
+FROM SQLTutorial.dbo.EmployeeDemographics
+Join SQLTutorial.dbo.EmployeeSalary
+ON EmployeeDemographics.EmployeeID=EmployeeSalary.EmployeeID
+Group by Jobtitle
+Having Count(Jobtitle) >1              --- we could use WHERE Count(Jobtitle) but it cause error - that why we use it. Important that HAVING is after Group by
+
+ -- oreder of everything is very necessary
+Select JobTitle, AVG(Salary)                                        -- We choose what to show
+FROM SQLTutorial.dbo.EmployeeDemographics                           -- from table
+Join SQLTutorial.dbo.EmployeeSalary                                 -- inner joined with this table
+ON EmployeeDemographics.EmployeeID=EmployeeSalary.EmployeeID        -- based on this condition (only matching id)
+Group by Jobtitle                                                   -- group data throught jobtitle
+Having AVG(Salary) > 45000                                          -- after aggregation of jobtitle we checking which avg salary jobtitle group is over 45000 (No where)
+ORDER BY AVG(Salary)                                                -- order ASC
+
+---Updateing/deleting-------
+Update SQLTutorial.dbo.EmployeeDemographics
+SET AGE = 31, Gender ='Female'
+WHERE EmployeeID = 1012                                            --based on this condition, the set values are updating
+
+Delete FROM SQLTutorial.dbo.EmployeeDemographics
+WHERE EmployeeID IS NULL                                           -- delete eveything with ID is null to BE AWARE
+
+--trick to show what we will be deleting - it will show what we will be deleting --------
+SELECT *
+FROM SQLTutorial.dbo.EmployeeDemographics
+WHERE EmployeeID IS NULL  
+
+
+--- Aliasing -----
+
+Select FirstName + ' ' + LastName AS Fullname      -- it is just creating new column ( in this case with connecting two columns with space beetwen) AS - aliast name
+FROM [SQLTutorial].[dbo].[EmployeeDemographics]
+
+Select Demo.EmployeeID
+FROM [SQLTutorial].[dbo].[EmployeeDemographics] AS Demo  -- alias table to use it 
+
+Select Demo.EmployeeID, Demo.FirstName, salary.JobTitle, salary.salary
+FROM [SQLTutorial].[dbo].[EmployeeDemographics] AS Demo          -- this is how naming should look like
+LEFT Join SQLTutorial.dbo.EmployeeSalary AS salary
+ON Demo.EmployeeID=salary.EmployeeID
+LEFT Join SQLTutorial.dbo.WareHouseEmployeeDemographics AS Ware
+ON Demo.EmployeeID=Ware.EmployeeID
+
+-- Partition BY -----
+
+Select firstname, LastName, Gender, salary, Count(gender) OVER (Partition BY Gender) AS TotalGender   -- in this case we have all information about every employee and extra column
+FROM [SQLTutorial].[dbo].[EmployeeDemographics] AS Demo                                               -- that aggreagate ammount of woman/man
+Join SQLTutorial.DBO.EmployeeSalary AS sal
+ON demo.EmployeeID=sal.EmployeeID
+
+Select Gender, Count(gender)
+FROM [SQLTutorial].[dbo].[EmployeeDemographics] AS Demo                                              -- in this case, there are only 2 column with amount of man/woman. We have to group by
+Join SQLTutorial.DBO.EmployeeSalary AS sal                                                           -- all select data or only one.
+ON demo.EmployeeID=sal.EmployeeID
+GROUP BY Gender
+
+
+
