@@ -8,3 +8,35 @@ Where Salary > '45000'
 SELECT FirstName, LastName  -- like subquery
 FROM CTE_Employee
 Where Gender = 'Male'   -- This is temporary containter, that is not in memory. It does contain the contenct of query and we can select particular data from it
+
+--temp tables----
+
+Create Table #temp_Employee (   -- remember about #
+EmployeeID int,
+Jobtitle varchar(50),
+Salary int
+)
+--Insert into #temp_Employee Values   ---manuall
+--('1001','HR','45000')
+
+Insert into #temp_Employee             -- insert from diffrent table (query)
+Select*
+FROM SQLTutorial.dbo.EmployeeSalary
+--------
+DROP TABLE IF EXISTS #temp_employee2             -- trick -> delete this table if it exists, becuase if it exist in temp we cannot create it again through procedure
+Create Table #temp_Employee2 (
+Jobtitle varchar(50),
+EmployeesPerJob int,
+AvgAge int,
+AvgSalary int
+)
+
+Insert into #temp_Employee2 
+Select Jobtitle, Count(jobtitle), Avg(age), AVG(salary)   ---- example procedure how  create temp table with preselected data in query
+FROM SQLTutorial.dbo.EmployeeDemographics AS demo
+JOIN SQLTutorial.dbo.EmployeeSalary AS sal
+ON Demo.EmployeeID=sal.EmployeeID
+Group by JobTitle
+
+Select*
+From #temp_Employee2            -- overall this usecase of temp table is also to get specific part of data from big database to reduce calculation and memory
