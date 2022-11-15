@@ -1,0 +1,10 @@
+WITH CTE_Employee AS
+(Select firstname, LastName, Gender, salary, Count(gender) OVER (Partition BY Gender) AS TotalGender, AVG(salary) OVER (Partition BY Gender) AS AvgSalary
+FROM [SQLTutorial].[dbo].[EmployeeDemographics] AS Demo
+Join SQLTutorial.DBO.EmployeeSalary AS sal
+ON demo.EmployeeID=sal.EmployeeID
+Where Salary > '45000'
+)
+SELECT FirstName, LastName  -- like subquery
+FROM CTE_Employee
+Where Gender = 'Male'   -- This is temporary containter, that is not in memory. It does contain the contenct of query and we can select particular data from it
