@@ -40,3 +40,25 @@ Group by JobTitle
 
 Select*
 From #temp_Employee2            -- overall this usecase of temp table is also to get specific part of data from big database to reduce calculation and memory
+
+-------functions--------
+Select EmployeeID, RTrim(EmployeeID) AS IDTrimmed  -- Rtrim Ltrim or TRIM (trim spaces etc.)
+From EmployeeErrors
+
+Select LastName, REPLACE(LastName, '- Fired', '') as LastNameFixed  -- replace value with new one, blank in this case
+From EmployeeErrors
+
+Select SUBSTRING(FirstName,1,4) As FirstNameChanged -- FirstName is the column, 1 - is start sign (from which letter we start) 4- amount of letter to show
+From EmployeeErrors
+
+Select err.FirstName, SUBSTRING(err.FirstName,1,3) , dem.FirstName, Substring(dem.FirstName,1,3)   --Fuzzy matching - it is the matching two tables based on signs
+From EmployeeErrors AS err                                              -- it is mostly used on fe. Gender/LastName/Age/DOB. Firstname is not good example
+Join SQLTutorial.dbo.EmployeeDemographics AS dem
+ON SUBSTRING(err.FirstName,1,3)=Substring(dem.FirstName,1,3)
+
+Select FirstName, UPPER(FirstName)    -- upper or lower
+From EmployeeErrors
+
+-- This query will change first on Capital, rest on small letters. Left choose how many letters we pick, Len give result of legnht of string
+Select FirstName, Lower(Firstname) As UpperName, UPPer(LEFT(FirstName,1))+Lower(Substring(Firstname,2,Len(Firstname))) AS Capitalfirst
+From EmployeeErrors  
