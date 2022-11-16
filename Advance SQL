@@ -61,4 +61,33 @@ From EmployeeErrors
 
 -- This query will change first on Capital, rest on small letters. Left choose how many letters we pick, Len give result of legnht of string
 Select FirstName, Lower(Firstname) As UpperName, UPPer(LEFT(FirstName,1))+Lower(Substring(Firstname,2,Len(Firstname))) AS Capitalfirst
-From EmployeeErrors  
+From EmployeeErrors 
+
+Update SQLTutorial.dbo.EmployeeErrors
+SET FirstName = UPPer(LEFT(FirstName,1))+Lower(Substring(Firstname,2,Len(Firstname))) -- this updateing data inside the table from result of query
+------------------
+
+--Storage procedure-----
+CREATE PROCEDURE Temp_Employee2  ---- it creates query that we can execute late. in this case creating temp table
+AS
+DROP TABLE IF EXISTS #temp_Employee2
+Create Table #temp_Employee2 (
+Jobtitle varchar(50),
+EmployeesPerJob int,
+AvgAge int,
+AvgSalary int
+)
+Insert into #temp_Employee2 
+Select Jobtitle, Count(jobtitle), Avg(age), AVG(salary)   ---- example procedure how  create temp table with preselected data in query
+FROM SQLTutorial.dbo.EmployeeDemographics AS demo
+JOIN SQLTutorial.dbo.EmployeeSalary AS sal
+ON Demo.EmployeeID=sal.EmployeeID
+Group by JobTitle
+
+SELECT *
+FROM #temp_Employee2
+----till this point-----        
+----Exec Temp_Employee2
+
+
+
