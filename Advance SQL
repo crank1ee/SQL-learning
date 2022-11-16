@@ -89,5 +89,77 @@ FROM #temp_Employee2
 ----till this point-----        
 ----Exec Temp_Employee2
 
+---- changing the procedure------
+--We can change procedure to got into it (modify), for example
+USE [SQLTutorial]
+GO
+/****** Object:  StoredProcedure [dbo].[Temp_Employee2]    Script Date: 16.11.2022 11:01:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[Temp_Employee2] --our stored procedure
+@Jobtitle nvarchar(100)  ---- this adding input from uses procedure
+AS
+DROP TABLE IF EXISTS #temp_Employee2
+Create Table #temp_Employee2 (
+Jobtitle varchar(50),
+EmployeesPerJob int,
+AvgAge int,
+AvgSalary int
+)
+Insert into #temp_Employee2 
+Select Jobtitle, Count(jobtitle), Avg(age), AVG(salary)   ---- example procedure how  create temp table with preselected data in query
+FROM SQLTutorial.dbo.EmployeeDemographics AS demo
+JOIN SQLTutorial.dbo.EmployeeSalary AS sal
+ON Demo.EmployeeID=sal.EmployeeID
+WHERE Jobtitle = @Jobtitle  --- added to query based on input from user
+Group by JobTitle
+
+SELECT *
+FROM #temp_Employee2
+
+---------- Exec Temp_Employee2 @JobTitle = 'Accountant' ----- call of procedure with new input
+
+----SUBQUERIES----
+
+---Subquery in Select
+
+Select EmployeeID, Salary, (Select AVG(Salary) FROM EmployeeSalary) AS AvgSalary
+From EmployeeSalary
+
+---- with Partition BY
+
+Select EmployeeID, Salary,  AVG(Salary) over () AS AllAvgSalary  --- without over() it wont work, because avg salary would be aggregate value
+From EmployeeSalary
+
+-- Why Group By doesn't work
+Select EmployeeID, Salary,  AVG(Salary) AS AllAvgSalary  --- won't work correctly, because we are grouping only 1 value show
+From EmployeeSalary
+Group by EmployeeID, Salary
+order by 1,2
+
+-------------------------
+
+-- SUbquery in From
+
+Select a.employeeID, AllAvgSalary
+From (Select employeeID, Salary, AVG(Salary) over () as AllAvgSalary
+	From EmployeeSalary) a                  ---- Temp and CTE are more usefull and memory friendly
+
+--- Subquery in Where
+
+Select EmployeeID, Jobtitle, Salary
+From EmployeeSalary
+Where EmployeeID in (
+	Select EmployeeID
+	From EmployeeDemographics
+	Where AGE>30)
+
+
+
+
+
+
 
 
